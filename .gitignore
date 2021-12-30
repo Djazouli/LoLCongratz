@@ -1,0 +1,4 @@
+/target
+.idea
+sounds/*.mp3
+sounds/mapping.json

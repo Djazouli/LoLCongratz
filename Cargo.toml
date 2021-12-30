@@ -1,0 +1,16 @@
+[package]
+name = "lol-congratz"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+env_logger = "*"
+lazy_static = "*"
+lol-game-client-api = "*"
+rand = "*"
+rodio = "*"
+serde_json = "*"
+tokio = {version = "*", features = ["sync", "full"]}
+thiserror = "*"
+log = "*"
