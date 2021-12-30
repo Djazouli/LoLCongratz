@@ -21,3 +21,7 @@ For example, the following `mapping.json` is valid:
   "KC Rekkles": ["omggg.mp3"]
 }
 ```
+
+## TODO
+Currently, the sound is played in your own headphones, and not on some virtual microphone that can be plugged into Discord.  
+I think this will require installing 3rd party software to allow this.
