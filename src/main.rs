@@ -17,7 +17,6 @@ async fn main() {
     #[cfg(feature = "voice_proxy")]
     vb_cable_proxy::start();
 
-    play_sound(Some("acetral.mp3"));
     loop {
         tokio::time::sleep(Duration::from_secs(600)).await;
     }
