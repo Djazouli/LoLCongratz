@@ -3,12 +3,17 @@ name = "lol-congratz"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["voice_proxy"]
+voice_proxy = ["anyhow", "ringbuf"]
 
 [dependencies]
+anyhow = {version = "*", optional = true}
 env_logger = "*"
 lazy_static = "*"
 lol-game-client-api = "*"
 rand = "*"
+ringbuf = {version = "*", optional = true}
 rodio = "*"
 serde_json = "*"
 tokio = {version = "*", features = ["sync", "full"]}

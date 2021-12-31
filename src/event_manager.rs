@@ -133,9 +133,16 @@ pub fn play_sound(filename: Option<impl Into<String>>) {
 
 /// Unwrap-heavy function, needs to be called in another thread.
 /// Given a full path to an audio file, play it.
+/// If a VB-Cable exists, play the sound on this VB-Cable, otherwise, play it on the default output device
 pub fn _play_sound(filename: String) {
     // handle to physical sound device
-    let (_stream, handle) = rodio::OutputStream::try_default().unwrap();
+    let vb_cable = crate::vb_cable_proxy::get_vb_cable();
+
+    let (_stream, handle) = match vb_cable {
+        Some(vb_cable) => rodio::OutputStream::try_from_device(&vb_cable).unwrap(),
+        None => rodio::OutputStream::try_default().unwrap(),
+    };
+
     let sink = rodio::Sink::try_new(&handle).unwrap();
 
     let file = std::fs::File::open(filename).unwrap();

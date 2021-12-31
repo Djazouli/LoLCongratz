@@ -22,6 +22,8 @@ For example, the following `mapping.json` is valid:
 }
 ```
 
-## TODO
-Currently, the sound is played in your own headphones, and not on some virtual microphone that can be plugged into Discord.  
-I think this will require installing 3rd party software to allow this.
+## VB Cable
+To be able to use this program output as an input for Discord, we will use a third party software: [VB Cable](https://vb-audio.com/Cable/).
+This program will play its sound in the `VB Cable` output, and the `VB Cable` input will be used as a source for Discord. Thus this program also needs to proxy the voice from our microphone to the output of VB Cable.
+
+The proxying is also doable via OBS and the "feedback" feature as can be seen [on this video](https://www.youtube.com/watch?v=Clcq7fk6L1k). If you want to use OBS, you can disable our voice proxying by disabling the default `voice_proxy` feature.
