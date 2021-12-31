@@ -15,7 +15,10 @@ pub fn get_vb_cable() -> Option<Device> {
 
     for device in devices {
         if let Ok(name) = device.name() {
-            if name.as_str() == "VB-Cable" {
+            if name.as_str() == "VB-Cable" // OSx
+                || name.as_str() == "CABLE Input (VB-Audio Virtual Cable)"
+            // Windows
+            {
                 return Some(device);
             }
         }
