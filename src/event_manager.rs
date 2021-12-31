@@ -136,7 +136,7 @@ pub fn play_sound(filename: Option<impl Into<String>>) {
 /// If a VB-Cable exists, play the sound on this VB-Cable, otherwise, play it on the default output device
 pub fn _play_sound(filename: String) {
     // handle to physical sound device
-    let vb_cable = crate::vb_cable_proxy::get_vb_cable();
+    let vb_cable = crate::get_vb_cable();
 
     let (_stream, handle) = match vb_cable {
         Some(vb_cable) => rodio::OutputStream::try_from_device(&vb_cable).unwrap(),

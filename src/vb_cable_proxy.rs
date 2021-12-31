@@ -4,24 +4,8 @@
 use ringbuf::RingBuffer;
 use rodio::cpal;
 use rodio::cpal::traits::{HostTrait, StreamTrait};
-use rodio::{Device, DeviceTrait};
+use rodio::DeviceTrait;
 use std::time::Duration;
-
-/// Get VB-cable device if it can be found.
-pub fn get_vb_cable() -> Option<Device> {
-    let host = rodio::cpal::default_host();
-    let devices = host.output_devices().unwrap();
-
-    for device in devices {
-        if let Ok(name) = device.name() {
-            if name.as_str() == "VB-Cable" {
-                return Some(device);
-            }
-        }
-    }
-
-    None
-}
 
 pub fn start() {
     std::thread::spawn(_start);
@@ -30,7 +14,7 @@ pub fn start() {
 /// Take the stream from the microphone (default_input) and proxy it to the vb cable output.
 pub fn _start() -> anyhow::Result<()> {
     let host = cpal::default_host();
-    let output_device = get_vb_cable();
+    let output_device = crate::get_vb_cable();
 
     if output_device.is_none() {
         return Ok(()); // No proxying done without VB Cable
