@@ -4,6 +4,7 @@ mod event_manager;
 mod vb_cable_proxy;
 
 use crate::event_manager::{play_sound, EventManager};
+use log::LevelFilter;
 use rodio::cpal::traits::HostTrait;
 use rodio::{Device, DeviceTrait};
 use std::time::Duration;
@@ -29,7 +30,9 @@ pub fn get_vb_cable() -> Option<Device> {
 
 #[tokio::main]
 async fn main() {
-    env_logger::init();
+    env_logger::builder()
+        .filter_level(LevelFilter::Trace)
+        .init();
 
     let event_listener = EventManager::new();
 
