@@ -4,6 +4,7 @@ use lol_game_client_api::async_trait::async_trait;
 use lol_game_client_api::event_listener::EventListener;
 use lol_game_client_api::model::{Ace, ChampionKill, GameStart, Multikill, Player, Team};
 use rand::seq::SliceRandom;
+use rodio::OutputStreamHandle;
 use std::collections::HashMap;
 use std::io::BufReader;
 use thiserror::Error;
@@ -126,23 +127,28 @@ pub enum SoundPlayerError {
 pub fn play_sound(filename: Option<impl Into<String>>) {
     if let Some(filename) = filename {
         let full_filename = format!("sounds/{}", filename.into());
-        // Spawn a separate thread, otherwise it will pause the whole current thread
-        std::thread::spawn(move || _play_sound(full_filename));
+        let full_filename_copy = full_filename.clone();
+        // Spawn separate threads, otherwise it will pause the whole current thread
+
+        // Play the sound in vb cable
+        std::thread::spawn(move || {
+            let vb_cable = crate::get_vb_cable();
+            let (_stream, vb_handle) =
+                rodio::OutputStream::try_from_device(&vb_cable.unwrap()).unwrap();
+            _play_sound(full_filename, vb_handle)
+        });
+
+        // play the sound in your output
+        std::thread::spawn(move || {
+            let (_stream, handle) = rodio::OutputStream::try_default().unwrap();
+            _play_sound(full_filename_copy, handle)
+        });
     }
 }
 
 /// Unwrap-heavy function, needs to be called in another thread.
 /// Given a full path to an audio file, play it.
-/// If a VB-Cable exists, play the sound on this VB-Cable, otherwise, play it on the default output device
-pub fn _play_sound(filename: String) {
-    // handle to physical sound device
-    let vb_cable = crate::get_vb_cable();
-
-    let (_stream, handle) = match vb_cable {
-        Some(vb_cable) => rodio::OutputStream::try_from_device(&vb_cable).unwrap(),
-        None => rodio::OutputStream::try_default().unwrap(),
-    };
-
+pub fn _play_sound(filename: String, handle: OutputStreamHandle) {
     let sink = rodio::Sink::try_new(&handle).unwrap();
 
     let file = std::fs::File::open(filename).unwrap();
